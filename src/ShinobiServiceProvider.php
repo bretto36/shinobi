@@ -22,12 +22,14 @@ class ShinobiServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (version_compare(Application::VERSION, '5.3.0', '<')) {
-            $this->publishes([
-                __DIR__.'/../migrations' => $this->app->databasePath().'/migrations',
-            ], 'migrations');
-        } else {
-            $this->loadMigrationsFrom(__DIR__.'/../migrations');
+        if(config('shinobi.run-migrations')) {
+            if (version_compare(Application::VERSION, '5.3.0', '<')) {
+                $this->publishes([
+                    __DIR__ . '/../migrations' => $this->app->databasePath() . '/migrations',
+                ], 'migrations');
+            } else {
+                $this->loadMigrationsFrom(__DIR__ . '/../migrations');
+            }
         }
 
         $this->registerBladeDirectives();
