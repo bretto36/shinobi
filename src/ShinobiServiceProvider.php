@@ -27,6 +27,10 @@ class ShinobiServiceProvider extends ServiceProvider
                 __DIR__ . '/../migrations' => $this->app->databasePath() . '/migrations',
             ], 'migrations');
         } else {
+            $this->publishes([
+                __DIR__.'/../config/shinobi.php' => config_path('shinobi.php'),
+            ]);
+
             if (config('shinobi.run-migrations', true)) {
                 $this->loadMigrationsFrom(__DIR__ . '/../migrations');
             }
@@ -42,6 +46,10 @@ class ShinobiServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/shinobi.php', 'shinobi'
+        );
+
         $this->app->singleton('shinobi', function ($app) {
             $auth = $app->make('Illuminate\Contracts\Auth\Guard');
 
